@@ -2,7 +2,7 @@ region      = "us-east-1"
 environment = "dev"
 app_name    = "simple-lambda"
 
-lambda_image_uri = "123456789012.dkr.ecr.us-east-1.amazonaws.com/simple-lambda-dev:latest"
+lambda_image_uri = "637423251679.dkr.ecr.us-east-1.amazonaws.com/simple-lambda-dev:latest"
 
 executions = {
   run_alice = {
