@@ -8,6 +8,7 @@ resource "aws_lambda_function" "this" {
   role          = aws_iam_role.lambda.arn
   package_type  = "Image"
   image_uri     = var.lambda_image_uri
+  architectures = ["arm64"]
   timeout       = 30
   memory_size   = 128
 
