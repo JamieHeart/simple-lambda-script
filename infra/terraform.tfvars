@@ -8,6 +8,11 @@ executions = {
   run_alice = {
     type   = "oneoff"
     name   = "Alice"
+    run_id = "2"
+  }
+  run_diana = {
+    type = "oneoff"
+    name = "Diana"
     run_id = "1"
   }
 }
