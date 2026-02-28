@@ -23,6 +23,6 @@ executions = {
   cron_stewart = {
     type     = "cron"
     name     = "Stewart"
-    schedule = "rate(5 minutes)"
+    schedule = "rate(10 minutes)"
   }
 }
