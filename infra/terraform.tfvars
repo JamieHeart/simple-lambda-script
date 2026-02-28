@@ -10,19 +10,4 @@ executions = {
     name   = "Alice"
     run_id = "1"
   }
-  cron_bob = {
-    type     = "cron"
-    name     = "Bob"
-    schedule = "rate(5 minutes)"
-  }
-  cron_charlie = {
-    type     = "cron"
-    name     = "Charlie"
-    schedule = "cron(0 9 * * ? *)"
-  }
-  cron_stewart = {
-    type     = "cron"
-    name     = "Stewart"
-    schedule = "rate(10 minutes)"
-  }
 }
