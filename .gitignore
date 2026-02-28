@@ -1,0 +1,14 @@
+# Terraform
+infra/.terraform/
+infra/.terraform.lock.hcl
+infra/*.tfplan
+infra/plan.txt
+*.tfstate
+*.tfstate.*
+
+# Python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store

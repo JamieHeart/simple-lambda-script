@@ -1,0 +1,56 @@
+name: Lambda Image
+
+on:
+  pull_request:
+    paths: ["lambda/**"]
+  push:
+    branches: [main]
+    paths: ["lambda/**"]
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: us-east-1
+
+jobs:
+  check-no-mixed-changes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Ensure no infra/ changes in this PR
+        if: github.event_name == 'pull_request'
+        run: |
+          INFRA_CHANGES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD -- infra/ | wc -l)
+          if [ "$INFRA_CHANGES" -gt 0 ]; then
+            echo "::error::This PR contains both lambda/ and infra/ changes. Please split into separate PRs."
+            exit 1
+          fi
+
+  build:
+    needs: check-no-mixed-changes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image (validate)
+        run: docker build -t simple-lambda-test lambda/
+
+  push:
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/amazon-ecr-login@v2
+        id: ecr
+      - name: Build, tag, push
+        env:
+          ECR_REGISTRY: ${{ steps.ecr.outputs.registry }}
+          ECR_REPO: simple-lambda-dev
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG lambda/
+          docker tag $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPO:latest
+          docker push $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPO:latest
