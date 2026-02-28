@@ -20,4 +20,12 @@ executions = {
     title    = "Dr."
     run_id   = "1"
   }
+  cron_charlie_fr = {
+    type     = "cron"
+    name     = "Charlie"
+    greeting = "bonjour"
+    language = "fr"
+    emoji    = true
+    schedule = "rate(5 minutes)"
+  }
 }
