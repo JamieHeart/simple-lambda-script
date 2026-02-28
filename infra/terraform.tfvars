@@ -20,4 +20,9 @@ executions = {
     name     = "Charlie"
     schedule = "cron(0 9 * * ? *)"
   }
+  cron_stewart = {
+    type     = "cron"
+    name     = "Stewart"
+    schedule = "rate(5 minutes)"
+  }
 }
