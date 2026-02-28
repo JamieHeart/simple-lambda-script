@@ -24,7 +24,11 @@ resource "aws_cloudwatch_event_target" "cron" {
   arn  = aws_lambda_function.this.arn
 
   input = jsonencode({
-    name = each.value.name
+    name     = each.value.name
+    greeting = each.value.greeting
+    language = each.value.language
+    title    = each.value.title
+    emoji    = each.value.emoji
   })
 }
 
@@ -38,30 +42,31 @@ resource "aws_lambda_permission" "cron" {
   source_arn    = aws_cloudwatch_event_rule.cron[each.key].arn
 }
 
-# ── One-Off Executions (null_resource + local-exec) ──────────────────────────
+# ── One-Off Executions (aws_lambda_invocation) ──────────────────────────────
 
-resource "null_resource" "oneoff" {
+resource "aws_lambda_invocation" "oneoff" {
   for_each = local.oneoff_executions
 
+  function_name = aws_lambda_function.this.function_name
+
   triggers = {
-    run_id  = each.value.run_id != null ? each.value.run_id : each.key
-    payload = jsonencode({ name = each.value.name })
+    run_id  = coalesce(each.value.run_id, each.key)
+    payload = jsonencode({
+      name     = each.value.name
+      greeting = each.value.greeting
+      language = each.value.language
+      title    = each.value.title
+      emoji    = each.value.emoji
+    })
   }
 
-  provisioner "local-exec" {
-    command = <<-EOT
-      aws lambda invoke \
-        --function-name ${aws_lambda_function.this.function_name} \
-        --payload '${jsonencode({ name = each.value.name })}' \
-        --cli-binary-format raw-in-base64-out \
-        --region ${var.region} \
-        --log-type Tail \
-        /tmp/lambda-response-${each.key}.json \
-      && echo "=== Lambda Response ===" \
-      && cat /tmp/lambda-response-${each.key}.json \
-      && echo ""
-    EOT
-  }
+  input = jsonencode({
+    name     = each.value.name
+    greeting = each.value.greeting
+    language = each.value.language
+    title    = each.value.title
+    emoji    = each.value.emoji
+  })
 
   depends_on = [aws_lambda_function.this]
 }
