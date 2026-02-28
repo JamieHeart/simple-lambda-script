@@ -17,3 +17,7 @@ output "log_group_name" {
 output "cron_rule_arns" {
   value = { for k, v in aws_cloudwatch_event_rule.cron : k => v.arn }
 }
+
+output "oneoff_results" {
+  value = { for k, v in aws_lambda_invocation.oneoff : k => v.result }
+}
