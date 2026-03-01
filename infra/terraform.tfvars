@@ -74,6 +74,6 @@ executions = {
     name = "Jamie"
     greeting = "Yo yo!"
     language = "en"
-    schedule = "rate(1 minutes)"
+    schedule = "rate(1 minute)"
   }
 }
