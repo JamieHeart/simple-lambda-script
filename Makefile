@@ -1,4 +1,4 @@
-.PHONY: build push init plan apply destroy logs
+.PHONY: build push init plan apply destroy logs history
 
 ECR_REPO_URL ?= $(shell cd infra && terraform output -raw ecr_repository_url 2>/dev/null)
 REGION       ?= us-east-1
@@ -30,3 +30,6 @@ destroy:
 
 logs:
 	aws logs tail $(LOG_GROUP) --follow --region $(REGION)
+
+history:
+	./scripts/execution-history.sh $(HOURS) $(LIMIT)
