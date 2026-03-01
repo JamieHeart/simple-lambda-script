@@ -10,5 +10,12 @@ infra/plan.txt
 __pycache__/
 *.pyc
 
+# Merge artifacts
+*.orig
+*_BACKUP_*
+*_BASE_*
+*_LOCAL_*
+*_REMOTE_*
+
 # OS
 .DS_Store
