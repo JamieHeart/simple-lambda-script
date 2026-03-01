@@ -13,11 +13,6 @@ variable "app_name" {
   default = "simple-lambda"
 }
 
-variable "lambda_image_uri" {
-  type        = string
-  description = "Full ECR image URI including tag (e.g., 123456789.dkr.ecr.us-east-1.amazonaws.com/simple-lambda-dev:latest)"
-}
-
 variable "executions" {
   type = map(object({
     type     = string
