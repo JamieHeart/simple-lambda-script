@@ -3,11 +3,16 @@ resource "aws_cloudwatch_log_group" "lambda" {
   retention_in_days = 7
 }
 
+data "aws_ecr_image" "latest" {
+  repository_name = aws_ecr_repository.this.name
+  image_tag       = "latest"
+}
+
 resource "aws_lambda_function" "this" {
   function_name = "${var.app_name}-${var.environment}"
   role          = aws_iam_role.lambda.arn
   package_type  = "Image"
-  image_uri     = var.lambda_image_uri
+  image_uri     = "${aws_ecr_repository.this.repository_url}@${data.aws_ecr_image.latest.image_digest}"
   architectures = ["arm64"]
   timeout       = 30
   memory_size   = 128
