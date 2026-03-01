@@ -2,28 +2,44 @@ region      = "us-east-1"
 environment = "dev"
 app_name    = "simple-lambda"
 
-# Update this after pushing your first image to ECR
-lambda_image_uri = "123456789012.dkr.ecr.us-east-1.amazonaws.com/simple-lambda-dev:latest"
-
 executions = {
-  # One-off invocation: bump run_id to re-trigger
+  # One-off invocation (minimal required fields)
   run_alice = {
-    type   = "oneoff"
-    name   = "Alice"
-    run_id = "1"
+    type     = "oneoff"
+    name     = "Alice"
+    greeting = "hello"
+    language = "en"
+    run_id   = "1"
   }
 
-  # Cron schedule: fires every 5 minutes
-  cron_bob = {
-    type     = "cron"
+  # One-off with title (optional)
+  run_bob = {
+    type     = "oneoff"
     name     = "Bob"
-    schedule = "rate(5 minutes)"
+    greeting = "buenos dias"
+    language = "es"
+    title    = "Dr."
+    run_id   = "1"
   }
 
-  # Cron schedule: fires daily at 9 AM UTC
+  # Cron with emoji (optional) -- fires every 5 minutes
   cron_charlie = {
     type     = "cron"
     name     = "Charlie"
+    greeting = "bonjour"
+    language = "fr"
+    emoji    = true
+    schedule = "rate(5 minutes)"
+  }
+
+  # Cron with all fields -- fires daily at 9 AM UTC
+  cron_diana = {
+    type     = "cron"
+    name     = "Diana"
+    greeting = "good morning"
+    language = "en"
+    title    = "Captain"
+    emoji    = true
     schedule = "cron(0 9 * * ? *)"
   }
 }
