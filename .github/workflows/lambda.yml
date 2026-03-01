@@ -12,6 +12,7 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_REGION: us-east-1
   AWS_DEFAULT_REGION: us-east-1
+  TARGET_PLATFORM: linux/arm64
 
 jobs:
   check-no-mixed-changes:
@@ -34,8 +35,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
       - name: Build image (validate)
-        run: docker build -t simple-lambda-test lambda/
+        run: docker build --platform $TARGET_PLATFORM -t simple-lambda-test lambda/
 
   push:
     needs: build
@@ -43,6 +47,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
       - uses: aws-actions/amazon-ecr-login@v2
         id: ecr
       - name: Build, tag, push
@@ -51,7 +58,7 @@ jobs:
           ECR_REPO: simple-lambda-dev
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG lambda/
+          docker build --platform $TARGET_PLATFORM -t $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG lambda/
           docker tag $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPO:latest
           docker push $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPO:latest
