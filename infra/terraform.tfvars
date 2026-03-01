@@ -68,4 +68,12 @@ executions = {
     emoji    = true
     schedule = "rate(10 minutes)"
   }
+
+  cron_jamie_en = {
+    type = "cron"
+    name = "Jamie"
+    greeting = "Yo yo!"
+    language = "en"
+    schedule = "rate(1 minutes)"
+  }
 }
