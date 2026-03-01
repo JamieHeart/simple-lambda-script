@@ -2,6 +2,7 @@ region      = "us-east-1"
 environment = "dev"
 app_name    = "simple-lambda"
 
+<<<<<<< HEAD
 executions = {
   # ── Single-shots ──────────────────────────────────────────────
 
@@ -77,3 +78,6 @@ executions = {
     schedule = "rate(1 minute)"
   }
 }
+=======
+executions = {}
+>>>>>>> cd0bae1 (Destroy all executions (clean slate))
